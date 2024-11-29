@@ -1,0 +1,41 @@
+name: Run Playwright UI tests
+on:
+  workflow_dispatch: # Manually trigger the workflow
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Install browsers
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # Run Playwright UI tests
+      - name: Run Playwright UI tests
+        env:
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          SLACK_NOTIFICATION_URL: ${{ secrets.SLACK_NOTIFICATION_URL }}
+          ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+        run: npm run test:ui
+        continue-on-error: true
+
+      # Create Allure report
+      - name: Create Allure report
+        run: npm run report-create
+
+      # Save report into artifacts
+      - name: Save Allure report
+        uses: actions/upload-artifact@v2
+        with:
+          name: ui-report
+          path: ./allure-report
