@@ -7,7 +7,7 @@ export class HomePage extends SalesPortalPage {
   readonly 'Products button' = this.findElement('#products-from-home');
   readonly 'Customers button' = this.findElement('#customers-from-home');
 
-  async clickOnViewDetailsButton(moduleName: 'Products' | 'Customers' | 'Orders') {
+  async clickOnViewDetailsButton(moduleName: 'Products' | 'Customers' | 'Orders'): Promise<void> {
     await this.click(this[`${moduleName} button`]);
   }
 }

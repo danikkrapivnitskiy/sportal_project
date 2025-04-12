@@ -1,4 +1,4 @@
-import { IResponseFields } from './api.types.js';
+import type { IResponseFields } from './api.types.js';
 
 export interface IProduct {
   name: string;

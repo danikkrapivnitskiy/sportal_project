@@ -1,23 +1,21 @@
-import { test as base, Page, PageScreenshotOptions } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 import { screenshotManager } from '../utils/report/screenshot';
 import { logger } from '../utils/report/logger';
-
-interface PageFixture {
-  page: Page;
-}
 
 /**
  * Extended test fixture that automatically captures screenshots on test failures
  * and performs other global setup/teardown operations
  */
 export const test = base.extend<{ autoScreenshot: null }>({
-  page: async ({ page }, use) => {
+  // Override the page fixture to add logging
+  page: async ({ page }: { page: Page }, use: (page: Page) => Promise<void>): Promise<void> => {
     // Setup - runs before each test that uses the page fixture
     logger.info('Starting test with page fixture');
     
     // Override page.goto to add logging
     const originalGoto = page.goto.bind(page);
-    page.goto = async (url: string, options?: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    page.goto = async (url: string, options?: any): Promise<any> => {
       logger.info(`Navigating to: ${url}`);
       return await originalGoto(url, options);
     };
@@ -30,12 +28,12 @@ export const test = base.extend<{ autoScreenshot: null }>({
   },
   
   // Auto-screenshot on failure
-  autoScreenshot: [async ({ page }, use) => {
+  autoScreenshot: [async ({ page }: { page: Page }, use: (arg: null) => Promise<void>): Promise<void> => {
     try {
       // This is before the test runs
       await use(null);
       // This is after the test runs successfully
-    } catch (error) {
+    } catch (error: unknown) {
       // This runs if the test fails
       const errorMessage = error instanceof Error ? error.message : String(error);
       logger.error(`Test failed: ${errorMessage}`);
@@ -47,7 +45,7 @@ export const test = base.extend<{ autoScreenshot: null }>({
           `failure-${Date.now()}`, 
           true
         );
-      } catch (screenshotError) {
+      } catch (screenshotError: unknown) {
         const errorMsg = screenshotError instanceof Error ? screenshotError.message : String(screenshotError);
         logger.error(`Failed to take failure screenshot: ${errorMsg}`);
       }
@@ -59,6 +57,6 @@ export const test = base.extend<{ autoScreenshot: null }>({
 });
 
 /**
- * Creates a test that includes all global fixtures
+ * Export expect from Playwright Test
  */
-export { expect } from '@playwright/test'; 
+export { expect }; 

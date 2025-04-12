@@ -11,35 +11,35 @@ export class CreateOrderPage extends SalesPortalPage {
   private readonly 'Cancel order button' = `#cancel-order-modal-btn`
   private readonly 'Close modal order button' = `button.btn-close`
 
-  async chooseCustomerFromDropdownByName(name: string) {
+  async chooseCustomerFromDropdownByName(name: string): Promise<void> {
     await this.selectDropdownValue(this['Customer order input'], `Name ${name}`)
   }
 
-  async chooseProductFromDropdownByName(name: string, index: number) {
+  async chooseProductFromDropdownByName(name: string, index: number): Promise<void> {
     await this.selectDropdownValue(`${this['Products section']}//*[@class='form-select'][${index}]`, name)
   }
 
-  async clickAddProduct() {
+  async clickAddProduct(): Promise<void> {
     await this.click(this['Add order button']);
   }
 
-  async clickDeleteProduct(index: number) {
+  async clickDeleteProduct(index: number): Promise<void> {
     await this.click(`${this['Delete order button']}[${index}]`);
   }
 
-  async getTotalOrderPrice() {
+  async getTotalOrderPrice(): Promise<void> {
     return await this.getText(this['Total order price']);
   }
 
-  async clickActionButton() {
+  async clickActionButton(): Promise<void> {
     await this.click(this['Create order button']);
   }
 
-  async clickCancelButton() {
+  async clickCancelButton(): Promise<void> {
     await this.click(this['Cancel order button']);
   }
 
-  async clickCloseModalButton() {    
+  async clickCloseModalButton(): Promise<void> {    
     await this.click(this['Close modal button'])
   }
 

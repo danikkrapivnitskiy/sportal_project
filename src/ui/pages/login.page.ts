@@ -9,12 +9,12 @@ export class SignInPage extends SalesPortalPage {
   readonly 'Login button' = this.findElement('button.btn-primary');
   readonly 'Login form' = this.findElement("//form[.//*[contains(text(),'Email address')]]");
 
-  async fillCredentialsInputs(credentials: IUserCredentials) {
+  async fillCredentialsInputs(credentials: IUserCredentials): Promise<void> {
     await this.setValue(this['Email input'], credentials.username);
     await this.setValue(this['Password input'], credentials.password);
   }
 
-  async clickSubmitButton() {
+  async clickSubmitButton(): Promise<void> {
     await this.click(this['Login button']);
   }
 }

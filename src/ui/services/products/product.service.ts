@@ -1,5 +1,6 @@
-import { expect, Page } from '@playwright/test';
-import { IProduct } from '../../../data/types/product.types.js';
+import { expect, type Page } from '@playwright/test';
+
+import type { IProduct } from '../../../data/types/product.types.js';
 import { logStep } from '../../../utils/report/logStep.js';
 import { DeleteModalPage } from '../../pages/modals/deleteModal.page.js';
 import { ProductDetailsModalPage } from '../../pages/modals/productDetailsModal.page.js';
@@ -13,31 +14,31 @@ export class ProductsListService {
   private modalWindowPage: ProductDetailsModalPage;
   private deleteModalPage: DeleteModalPage;
   constructor(protected page: Page) {
-    (this.productsPage = new ProductsListPage(page)),
-      (this.addNewProductPage = new AddNewProductPage(page)),
-      (this.modalWindowPage = new ProductDetailsModalPage(page)),
-      (this.deleteModalPage = new DeleteModalPage(page));
+    this.productsPage = new ProductsListPage(page);
+    this.addNewProductPage = new AddNewProductPage(page);
+    this.modalWindowPage = new ProductDetailsModalPage(page);
+    this.deleteModalPage = new DeleteModalPage(page);
   }
 
   @logStep('Open add new product page')
-  async openAddNewProductPage() {
+  async openAddNewProductPage(): Promise<void> {
     await this.productsPage.clickOnAddNewProduct();
     await this.productsPage.waitForSpinnerToHide();
     await this.addNewProductPage.waitForOpened();
   }
 
   @logStep('Get created product data')
-  async getCreatedProductData(productName: string) {
+  async getCreatedProductData(productName: string): Promise<Record<string, string | number>> {
     const createdProductData = await this.productsPage.getDataByName(productName);
     return createdProductData;
   }
 
-  private async openDetails(productName: string) {
+  private async openDetails(productName: string): Promise<void> {
     await this.productsPage.clickOnDetailsButton(productName);
   }
 
   @logStep('Get product details info from modal window')
-  async getCreatedProductDetails(productName: string) {
+  async getCreatedProductDetails(productName: string): Promise<Record<string, string | number>> {
     await this.openDetails(productName);
     const productData = await this.modalWindowPage.getProductData();
     await this.modalWindowPage.clickCloseModalButton();
@@ -45,20 +46,20 @@ export class ProductsListService {
   }
 
   @logStep('Delete created product')
-  async deleteCreatedProduct(productName: string) {
+  async deleteCreatedProduct(productName: string): Promise<void> {
     await this.productsPage.clickOnDeleteButton(productName);
     await this.deleteModalPage.clickActionButton();
   }
 
   @logStep('Validate product in table')
-  async checkProductInTable(product: IProduct) {
+  async checkProductInTable(product: IProduct): Promise<void> {
     const actualProduct = await this.getCreatedProductData(product.name);
     const expectedProduct = _.pick(product, ['name', 'price', 'manufacturer']);
     expect(actualProduct).toMatchObject(expectedProduct);
   }
 
   @logStep('Validate product in modal window')
-  async checkProductByModalData(product: IProduct) {
+  async checkProductByModalData(product: IProduct): Promise<void> {
     const actualProduct = await this.getCreatedProductData(product.name);
     const expectedProductFromModal = _.omit(await this.getCreatedProductDetails(product.name), [
       'amount',

@@ -1,6 +1,6 @@
 import { AllureRuntime, ContentType } from 'allure-js-commons';
-import fs from 'fs-extra';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export enum LogLevel {
   DEBUG = 'DEBUG',
@@ -16,7 +16,9 @@ export class Logger {
 
   private constructor() {
     this.runtime = new AllureRuntime({ resultsDir: './allure-results' });
-    this.logDir = path.resolve(process.cwd(), 'logs');
+    // Use __dirname for Node.js path resolution
+    const cwd = process.cwd();
+    this.logDir = path.resolve(cwd, 'logs');
     this.ensureLogDirExists();
   }
 
@@ -50,16 +52,20 @@ export class Logger {
     // Write to console
     switch (level) {
       case LogLevel.DEBUG:
-        console.debug(formattedMessage);
+        process.stdout.write(`${formattedMessage}
+`);
         break;
       case LogLevel.INFO:
-        console.info(formattedMessage);
+        process.stdout.write(`${formattedMessage}
+`);
         break;
       case LogLevel.WARN:
-        console.warn(formattedMessage);
+        process.stderr.write(`${formattedMessage}
+`);
         break;
       case LogLevel.ERROR:
-        console.error(formattedMessage);
+        process.stderr.write(`${formattedMessage}
+`);
         break;
     }
     
@@ -68,10 +74,10 @@ export class Logger {
     
     // Attach to Allure
     if (attachToAllure) {
+      // The third parameter should be a file name without encoding specification
       this.runtime.writeAttachment(
         formattedMessage,
-        ContentType.TEXT,
-        `.log-${level.toLowerCase()}`
+        ContentType.TEXT
       );
     }
   }
@@ -92,6 +98,7 @@ export class Logger {
     this.log(LogLevel.ERROR, message, attachToAllure);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public step(stepName: string, fn: () => Promise<any> | any): Promise<any> | any {
     this.info(`Starting step: ${stepName}`);
     try {
@@ -100,7 +107,7 @@ export class Logger {
         return result.then((value) => {
           this.info(`Completed step: ${stepName}`);
           return value;
-        }).catch((err) => {
+        }).catch((err: unknown) => {
           const errorMessage = err instanceof Error ? err.message : String(err);
           this.error(`Failed step: ${stepName}. Error: ${errorMessage}`);
           throw err;
@@ -109,7 +116,7 @@ export class Logger {
         this.info(`Completed step: ${stepName}`);
         return result;
       }
-    } catch (err) {
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       this.error(`Failed step: ${stepName}. Error: ${errorMessage}`);
       throw err;

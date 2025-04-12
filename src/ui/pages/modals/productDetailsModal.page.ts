@@ -1,23 +1,23 @@
 import { BaseModalPage } from '../baseModal.page.js';
 
 export class ProductDetailsModalPage extends BaseModalPage {
-  uniqueElement: string;
-  private readonly 'Row value by row name' = (row: string) =>
+  uniqueElement: string = '';
+  private readonly 'Row value by row name' = (row: string): string =>
     `//div[@class="modal-body"]//div[strong[text()="${row}:"]]/div`;
 
-  async clickActionButton() {
+  async clickActionButton(): Promise<void> {
     await this.click(this['Submit button']);
   }
 
-  async clickCancelButton() {
+  async clickCancelButton(): Promise<void> {
     await this.click(this['Cancel button']);
   }
 
-  async clickCloseModalButton() {
+  async clickCloseModalButton(): Promise<void> {
     await this.click(this['Close modal button']);
   }
 
-  async getProductData() {
+  async getProductData(): Promise<Record<string, string | number>> {
     const [name, amount, price, manufacturer, createdOn, notes] = await Promise.all([
       this.getText(this['Row value by row name']('Name')),
       this.getText(this['Row value by row name']('Amount')),

@@ -1,12 +1,12 @@
 import { apiConfig } from '../../config/apiConfig';
-import { IRequestOptions } from '../../data/types/api.types';
-import { ILoginResponse, IUserCredentials } from '../../data/types/user.types';
+import type { IRequestOptions } from '../../data/types/api.types';
+import type { ILoginResponse, IUserCredentials } from '../../data/types/user.types';
 import { RequestApi } from '../../utils/apiClients/request';
 
 export class SignInApiClient {
   constructor(private request = new RequestApi()) {}
 
-  async login(credentials: IUserCredentials) {
+  async login(credentials: IUserCredentials): Promise<void> {
     const options: IRequestOptions = {
       method: 'post',
       url: apiConfig.endpoints.Login,

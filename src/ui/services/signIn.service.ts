@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/environment';
-import { IUserCredentials } from '../../data/types/user.types.js';
+import type { IUserCredentials } from '../../data/types/user.types.js';
 import { HomePage } from '../pages/home.page.js';
 import { SignInPage } from '../pages/login.page.js';
 import { logStep } from '../../utils/report/logStep.js';
@@ -14,12 +14,12 @@ export class SignInService {
   }
 
   @logStep()
-  async openSalesPortal() {
+  async openSalesPortal(): Promise<void> {
     await this.signInPage.openPage('https://anatoly-karpovich.github.io/aqa-course-project');
   }
 
   @logStep()
-  async login(credentials: IUserCredentials) {
+  async login(credentials: IUserCredentials): Promise<void> {
     await this.signInPage.fillCredentialsInputs(credentials);
     await this.signInPage.clickSubmitButton();
     await this.signInPage.waitForSpinnerToHide();
@@ -27,11 +27,11 @@ export class SignInService {
   }
 
   @logStep()
-  async loginAsAdmin() {
+  async loginAsAdmin(): Promise<void> {
     await this.login({ username: ADMIN_USERNAME, password: ADMIN_PASSWORD });
   }
 
-  async fillInputs(credentials: IUserCredentials) {
+  async fillInputs(credentials: IUserCredentials): Promise<void> {
     await this.signInPage.fillCredentialsInputs(credentials);
   }  
 }

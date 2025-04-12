@@ -12,7 +12,7 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        project: './tsconfig.json',
+        project: './tsconfig.eslint.json',
       },
     },
     rules: {
@@ -26,6 +26,6 @@ export default tseslint.config(
       'eqeqeq': ['error', 'always'],
       'no-duplicate-imports': 'error',
     },
-    ignores: ['dist/**', 'node_modules/**', 'allure-report/**', 'allure-results/**'],
+    ignores: ['dist/**', 'node_modules/**', 'allure-report/**', 'allure-results/**', 'scripts/**', 'eslint.config.mjs'],
   }
 );

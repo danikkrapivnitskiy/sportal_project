@@ -1,11 +1,11 @@
 import { SLACK_NOTIFICATION_URL } from '../config/environment';
-import { IRequestOptions } from '../data/types/api.types';
+import type { IRequestOptions } from '../data/types/api.types';
 import { RequestApi } from '../utils/apiClients/request';
 
 class SlackService {
   constructor(private apiClient = new RequestApi()) {}
 
-  async postNotification(text: string) {
+  async postNotification(text: string): Promise<void> {
     const options: IRequestOptions = {
       method: 'post',
       baseURL: `https://hooks.slack.com/`,

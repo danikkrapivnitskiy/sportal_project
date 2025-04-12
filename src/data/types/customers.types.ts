@@ -1,4 +1,4 @@
-import { IResponseFields } from './api.types';
+import type { IResponseFields } from './api.types';
 
 export enum COUNTRIES {
   USA = 'USA',

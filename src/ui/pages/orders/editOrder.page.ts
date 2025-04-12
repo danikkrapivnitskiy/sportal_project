@@ -1,12 +1,12 @@
-import { ICustomerDetails, IOrderDetails, IRequestedProductDetails } from '../../../data/types/orders.types.js';
+import type { ICustomerDetails, IOrderDetails, IRequestedProductDetails } from '../../../data/types/orders.types.js';
 import { SalesPortalPage } from '../salesPortal.page.js';
 
 export class EditOrderPage extends SalesPortalPage {
   readonly uniqueElement = '//h2[.="Order Details"]';
-  private readonly 'Key details' = (key) => `//*[contains(@class,'fw-bold') and text()='${key}']/following-sibling::*[text()]`;
+  private readonly 'Key details' = (key: string): string => `//*[contains(@class,'fw-bold') and text()='${key}']/following-sibling::*[text()]`;
   private readonly 'Refresh order button' = `#refresh-order`;
   private readonly 'Accortion section' = `#products-accordion-section`;
-  private readonly 'Accortion button' = (name) => `//button[@class="accordion-button" and normalize-space(.//text())='${name}']`;
+  private readonly 'Accortion button' = (name: string): string => `//button[@class="accordion-button" and normalize-space(.//text())='${name}']`;
 
 
   async getOrderDetails(): Promise<IOrderDetails> {
@@ -35,7 +35,7 @@ export class EditOrderPage extends SalesPortalPage {
     }
   }
 
-  async refreshOrder() {
+  async refreshOrder(): Promise<void> {
     await this.click(this['Refresh order button']);
   }
 
@@ -48,9 +48,11 @@ export class EditOrderPage extends SalesPortalPage {
     }
   }
 
-  async collapseRequstedProduct(name: string, collapse: boolean) {
-    collapse.toString() !== await this.getElementAttribute(this['Accortion button'](name), 'aria-expanded')
-    && await this.click(this['Accortion button'](name))
+  async collapseRequstedProduct(name: string, collapse: boolean): Promise<void> {
+    const expandedAttr = await this.getElementAttribute(this['Accortion button'](name), 'aria-expanded');
+    if (collapse.toString() !== expandedAttr) {
+      await this.click(this['Accortion button'](name));
+    }
   }
 
 }

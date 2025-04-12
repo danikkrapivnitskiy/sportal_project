@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { AllureRuntime, ContentType } from 'allure-js-commons';
 import { logger } from './logger';
 
@@ -33,12 +33,11 @@ export class ScreenshotManager {
       
       this.runtime.writeAttachment(
         screenshot,
-        ContentType.PNG,
-        name
+        ContentType.PNG
       );
       
       logger.debug(`Screenshot taken: ${name}`);
-    } catch (err) {
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       logger.error(`Failed to take screenshot: ${name}. Error: ${errorMessage}`);
     }
@@ -64,12 +63,11 @@ export class ScreenshotManager {
       
       this.runtime.writeAttachment(
         screenshot,
-        ContentType.PNG,
-        name
+        ContentType.PNG
       );
       
       logger.debug(`Element screenshot taken: ${name}`);
-    } catch (err) {
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       logger.error(`Failed to take element screenshot: ${name} (${selector}). Error: ${errorMessage}`);
     }

@@ -1,9 +1,10 @@
-import { APIRequestContext, APIResponse, request } from '@playwright/test';
+import { request, type APIRequestContext, type APIResponse } from '@playwright/test';
 import { logger } from '../report/logger';
 
 interface RequestOptions {
   headers?: Record<string, string>;
   params?: Record<string, string | number | boolean>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: Record<string, any> | string | FormData;
   failOnStatusCode?: boolean;
   timeout?: number;
@@ -12,7 +13,7 @@ interface RequestOptions {
 }
 
 export class EnhancedApiClient {
-  private context: APIRequestContext;
+  private context!: APIRequestContext;
   private baseUrl: string;
   private defaultOptions: RequestOptions = {
     failOnStatusCode: false,
@@ -23,7 +24,9 @@ export class EnhancedApiClient {
 
   constructor(baseUrl: string, defaultHeaders?: Record<string, string>) {
     this.baseUrl = baseUrl;
-    this.initialize(defaultHeaders);
+    this.initialize(defaultHeaders).catch(error => {
+      logger.error(`Failed to initialize API client: ${error instanceof Error ? error.message : String(error)}`);
+    });
   }
 
   private async initialize(defaultHeaders?: Record<string, string>): Promise<void> {
@@ -126,7 +129,8 @@ export class EnhancedApiClient {
           } else {
             responseBody = await response.text();
           }
-        } catch (e) {
+        } catch {
+          // Error parsing response body, ignore the error itself
           responseBody = '(failed to parse response body)';
         }
 
@@ -144,7 +148,7 @@ export class EnhancedApiClient {
         }
 
         throw new Error(`Request failed with status ${status}: ${statusText}`);
-      } catch (error) {
+      } catch (error: unknown) {
         lastError = error instanceof Error ? error : new Error(String(error));
         
         if (attempts >= maxAttempts) {

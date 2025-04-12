@@ -1,6 +1,6 @@
-import { expect, Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';;
 import { generateNewCustomer } from '../../../data/customers/generateCustomer.js';
-import { ICustomer, ICustomerResponse } from '../../../data/types/customers.types.js';
+import type { ICustomer, ICustomerResponse } from '../../../data/types/customers.types.js';
 import { AddNewCustomerPage } from '../../pages/customers/addNewCustomer.page.js';
 import { CustomersListPage } from '../../pages/customers/customers.page.js';
 import { apiConfig } from '../../../config/apiConfig.js';
@@ -18,17 +18,17 @@ export class AddCustomerService {
   }
 
   @logStep()
-  async fillCustomerInputs(customer: Partial<ICustomer>) {
+  async fillCustomerInputs(customer: Partial<ICustomer>): Promise<void> {
     await this.addNewCustomerPage.fillInputs(customer);
   }
 
   @logStep()
-  async save() {
+  async save(): Promise<void> {
     await this.addNewCustomerPage.clickOnSaveButton();
   }
 
   @logStep()
-  async create(customer?: ICustomer) {
+  async create(customer?: ICustomer): Promise<void> {
     const customerData = customer ?? generateNewCustomer();
     await this.fillCustomerInputs(customerData);
     const responseUrl = apiConfig.baseUrl + apiConfig.endpoints.Customers;

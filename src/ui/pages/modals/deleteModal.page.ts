@@ -3,14 +3,14 @@ import { BaseModalPage } from '../baseModal.page.js';
 export class DeleteModalPage extends BaseModalPage {
 
   uniqueElement: string;
-  async clickActionButton() {    
+  async clickActionButton(): Promise<void> {    
     await this.click(this['Submit button']);
   }
-  async clickCancelButton() {    
+  async clickCancelButton(): Promise<void> {    
     await this.click(this['Cancel button'])
   }
 
-  async clickCloseModalButton() {    
+  async clickCloseModalButton(): Promise<void> {    
     await this.click(this['Close modal button'])
   }
 }

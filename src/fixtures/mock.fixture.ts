@@ -1,11 +1,11 @@
-import { Page, test as base } from '@playwright/test';
-import { STATUS_CODES } from '../data/types/api.types';
+import { test as base, type Page } from '@playwright/test';
+import type { STATUS_CODES } from '../data/types/api.types';
 
 export class Mock {
   constructor(private page: Page) {}
 
-  public async modifyReponse<T>(url: string, body: T, status: STATUS_CODES) {
-    await this.page.route(url, async (routeForModifications, request) => {
+  public async modifyReponse<T>(url: string, body: T, status: STATUS_CODES): Promise<void> {
+    await this.page.route(url, async (routeForModifications, _request) => {
       // Can be filtered, for example by method like below:
       //
       // if (request.method() === 'POST') {

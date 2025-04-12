@@ -1,11 +1,11 @@
 import { TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN } from "../config/environment";
-import { IRequestOptions } from "../data/types/api.types";
+import type { IRequestOptions } from "../data/types/api.types";
 import { RequestApi } from "../utils/apiClients/request";
 
 class TelegramService {
     constructor(private apiClient = new RequestApi()) {}
   
-    async postNotification(text: string) {
+    async postNotification(text: string): Promise<void> {
       const options: IRequestOptions = {
         method: "post",
         baseURL: `https://api.telegram.org/`,

@@ -50,7 +50,7 @@ export const test = base.extend<ISalesPortalServices>({
     await use(new ProductsListPage(page));
   },
 
-  customersApiService: async ({}, use) => {
+  customersApiService: async ({ _request }, use) => {
     await use(new CustomersApiService());
   },
 

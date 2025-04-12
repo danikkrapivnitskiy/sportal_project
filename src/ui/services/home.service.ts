@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { HomePage } from '../pages/home.page.js';
 import { CustomersListPage } from '../pages/customers/customers.page.js';
 import { ProductsListPage } from '../pages/products/products.page.js';
@@ -18,21 +18,21 @@ export class HomeService {
   }
 
   @logStep()
-  async openCustomersPage() {
+  async openCustomersPage(): Promise<void> {
     await this.homePage.clickOnViewDetailsButton('Customers');
     await this.homePage.waitForSpinnerToHide();
     await this.customersPage.waitForOpened();
   }
 
   @logStep()
-  async openProductsPage() {
+  async openProductsPage(): Promise<void> {
     await this.homePage.clickOnViewDetailsButton('Products');
     await this.homePage.waitForSpinnerToHide();
     await this.productsPage.waitForOpened();
   }
 
   @logStep()
-  async openOrdersPage() {
+  async openOrdersPage(): Promise<void> {
     await this.homePage.clickOnViewDetailsButton('Orders');
     await this.homePage.waitForSpinnerToHide();
     await this.ordersPage.waitForOpened();

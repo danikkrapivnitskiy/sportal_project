@@ -1,4 +1,4 @@
-import { ICustomersResponse } from '../types/customers.types';
+import type { ICustomersResponse } from '../types/customers.types';
 
 export const EMPTY_TABLE_MOCK: ICustomersResponse = {
   Customers: [],

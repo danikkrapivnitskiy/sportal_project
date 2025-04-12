@@ -8,14 +8,14 @@ class SignInApiService {
 
   constructor(private signInClient = new SignInApiClient()) {}
 
-  async loginAsAdmin() {
+  async loginAsAdmin(): Promise<void> {
     const response = await this.signInClient.login({ username: ADMIN_USERNAME, password: ADMIN_PASSWORD });
     expect(response.status).toBe(STATUS_CODES.OK);
     this.token = `Bearer ${response.body.token}`;
     return response.body.token;
   }
 
-  async getToken() {
+  async getToken(): Promise<void> {
     if (!this.token) {
       await this.loginAsAdmin();
     }
