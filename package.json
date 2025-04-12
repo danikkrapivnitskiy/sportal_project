@@ -7,6 +7,7 @@
     "test:ui": "cross-env TESTS=ui npx playwright test --project=ui",
     "test:visual": "cross-env TESTS=ui npx playwright test --project=visual",
     "test:api": "cross-env TESTS=api npx playwright test --project=api",
+    "test:all": "npx playwright test",
     "ui-mode": "npx playwright test --ui",
     "report-html-open": "npx playwright show-report",
     "report-create": "allure generate allure-results -o allure-report --clean",
@@ -14,11 +15,17 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --config .prettierrc src/**/*.ts --check",
-    "prettier-fix": "prettier --config .prettierrc src/**/*.ts --write"
+    "prettier-fix": "prettier --config .prettierrc src/**/*.ts --write",
+    "update-deps": "npm update && npm outdated",
+    "update-browsers": "npx playwright install",
+    "clean-reports": "rimraf allure-results allure-report",
+    "precommit": "npm run lint && npm run prettier",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run prettier"
+      "pre-commit": "npm run precommit"
     }
   },
   "keywords": [],
@@ -29,6 +36,7 @@
     "@playwright/test": "^1.46.1",
     "@types/ajv": "^1.0.0",
     "@types/dotenv": "^8.2.0",
+    "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.4.1",
     "@typescript-eslint/eslint-plugin": "^8.5.0",
@@ -38,6 +46,8 @@
     "globals": "^15.9.0",
     "husky": "^9.1.5",
     "prettier": "^3.3.3",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3",
     "typescript-eslint": "^8.5.0"
   },
   "dependencies": {
@@ -45,10 +55,14 @@
     "ajv": "^8.17.1",
     "allure": "^0.0.0",
     "allure-commandline": "^2.30.0",
+    "allure-js-commons": "^2.11.1",
     "allure-playwright": "^3.0.0-beta.10",
+    "axios": "^1.6.7",
     "dotenv": "^16.4.5",
+    "fs-extra": "^11.2.0",
     "lodash": "^4.17.21",
     "node": "^22.9.0",
-    "playwright-qase-reporter": "^2.0.12"
+    "playwright-qase-reporter": "^2.0.12",
+    "winston": "^3.12.0"
   }
 }

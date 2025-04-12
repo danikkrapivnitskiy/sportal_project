@@ -1,20 +1,31 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import globals from 'globals';
 
-export default [
-  pluginJs.configs.recommended,
+export default tseslint.config(
+  js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["src/**/*.ts"],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "no-empty-pattern": "off",
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parserOptions: {
+        project: './tsconfig.json',
+      },
     },
-  },
-  { languageOptions: { globals: globals.browser } },
-  {
-    ignores: ["node_modules/*", "allure-results/*", "allure-report/*", "dist/*", "logs/*", "playwright-report/*"],
-  },
-];
+    rules: {
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/consistent-type-imports': 'error',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'eqeqeq': ['error', 'always'],
+      'no-duplicate-imports': 'error',
+    },
+    ignores: ['dist/**', 'node_modules/**', 'allure-report/**', 'allure-results/**'],
+  }
+);

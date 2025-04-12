@@ -1,0 +1,150 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of tests to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - ui
+          - api
+          - visual
+
+jobs:
+  lint:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run linting
+        run: npm run lint
+      - name: Check types
+        run: npx tsc --noEmit
+
+  ui-tests:
+    name: UI Tests
+    needs: lint
+    if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'ui' || github.event.inputs.test_type == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run UI tests
+        run: npm run test:ui
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-results
+          path: allure-results
+          retention-days: 30
+
+  api-tests:
+    name: API Tests
+    needs: lint
+    if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'api' || github.event.inputs.test_type == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run API tests
+        run: npm run test:api
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-results
+          path: allure-results
+          retention-days: 30
+
+  visual-tests:
+    name: Visual Regression Tests
+    needs: lint
+    if: ${{ github.event.inputs.test_type == 'all' || github.event.inputs.test_type == 'visual' || github.event.inputs.test_type == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run visual tests
+        run: npm run test:visual
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-test-results
+          path: allure-results
+          retention-days: 30
+
+  generate-report:
+    name: Generate Test Report
+    needs: [ui-tests, api-tests, visual-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: combined-results
+      - name: Merge test results
+        run: |
+          mkdir -p allure-results
+          find combined-results -type f -name "*.json" -exec cp {} allure-results/ \;
+      - name: Generate Allure report
+        run: npm run report-create
+      - name: Upload Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 30
+      - name: Deploy report to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report 

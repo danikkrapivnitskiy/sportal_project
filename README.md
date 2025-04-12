@@ -1,44 +1,107 @@
-### Test Automation Framework: A Journey Through Best Practices
+# Sportal Project
 
----
+A modern testing framework built with Playwright and TypeScript.
 
-    This project showcases a TAF demo, built with a focus on best practices and a commitment to clean, maintainable code.
+## 🚀 Features
 
----
+- End-to-end testing with Playwright
+- API testing capabilities
+- Visual regression testing
+- Comprehensive test reporting with Allure
+- TypeScript support
+- ESLint and Prettier for code quality
+- Husky for pre-commit hooks
 
-### Core Principles
+## 📋 Prerequisites
 
-#### This project embodies the following principles:
-1. Layered Architecture
-2. Framework Development Patterns: POP, OOP, Fabrics and etc
-3. SOLID, DRY, KISS and etc
+- Node.js (v18 or higher)
+- npm (v9 or higher)
 
-### Getting Started:
-#### 1. Clone repository to your directory and navigate to project folder
-- Write to your command line this command
-    ```bash
-    git clone https://github.com/danikkrapivnitskiy/sportal_project && cd sportal_project
-    ```
-#### 2. Prerequisites:
-  - install project
-    ```bash
-    npm ci
-    ```
-#### 3. Run Tests:
-- Run UI tests.
-    ```bash
-    npm run test:ui
-    ```
-- Run Visual tests.
-    ```bash
-    npm run test:visual
-    ```
-- Run API tests.
-    ```bash
-    npm run test:api
-    ```
-#### 4. Take a look at your first test report!
-- Generate allure report
-    ```bash
-    npm run report-open
-    ```
+## 🛠️ Installation
+
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd sportal_project
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+## 🧪 Running Tests
+
+- Run UI tests:
+```bash
+npm run test:ui
+```
+
+- Run API tests:
+```bash
+npm run test:api
+```
+
+- Run visual regression tests:
+```bash
+npm run test:visual
+```
+
+- Open Playwright UI mode:
+```bash
+npm run ui-mode
+```
+
+## 📊 Test Reports
+
+- Generate and open Allure report:
+```bash
+npm run report-open
+```
+
+## 🔧 Development
+
+- Lint code:
+```bash
+npm run lint
+```
+
+- Fix linting issues:
+```bash
+npm run lint-fix
+```
+
+- Format code with Prettier:
+```bash
+npm run prettier-fix
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── api/         # API test specifications
+├── config/      # Configuration files
+├── data/        # Test data and fixtures
+├── fixtures/    # Test fixtures
+├── services/    # Service layer implementations
+├── ui/          # UI test specifications
+└── utils/       # Utility functions and helpers
+```
+
+## 🤝 Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Run tests and ensure they pass
+4. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the ISC License.
